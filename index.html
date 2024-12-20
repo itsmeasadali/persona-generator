@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Persona Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>User Persona Generator</h1>
+        
+        <div class="form-section">
+            <h2>Define Your Persona</h2>
+            <form id="personaForm">
+                <div class="form-group">
+                    <label for="ageRange">Age Range:</label>
+                    <select id="ageRange" required>
+                        <option value="18-24">18-24</option>
+                        <option value="25-34">25-34</option>
+                        <option value="35-44">35-44</option>
+                        <option value="45-54">45-54</option>
+                        <option value="55+">55+</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="occupation">Occupation Field:</label>
+                    <select id="occupation" required>
+                        <option value="technology">Technology</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="education">Education</option>
+                        <option value="finance">Finance</option>
+                        <option value="creative">Creative</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="goals">Primary Goals:</label>
+                    <select id="goals" multiple required>
+                        <option value="productivity">Increase Productivity</option>
+                        <option value="learning">Continuous Learning</option>
+                        <option value="worklife">Work-Life Balance</option>
+                        <option value="career">Career Growth</option>
+                        <option value="networking">Professional Networking</option>
+                    </select>
+                </div>
+
+                <button type="submit">Generate Persona</button>
+            </form>
+        </div>
+
+        <div id="personaOutput" class="persona-card hidden">
+            <!-- Persona content will be inserted here -->
+        </div>
+
+        <div class="export-buttons hidden">
+            <button id="exportPDF">Export as PDF</button>
+            <button id="exportImage">Export as Image</button>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="persona-data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html> 
