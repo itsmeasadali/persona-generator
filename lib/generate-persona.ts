@@ -6,6 +6,9 @@ interface FormData {
   goals: string[]
 }
 
+// Define the valid occupation types
+type Occupation = 'technology' | 'healthcare' | 'education' | 'finance' | 'creative';
+
 export function generatePersona(formData: FormData) {
   const { ageRange, occupation, goals } = formData
 
@@ -15,11 +18,11 @@ export function generatePersona(formData: FormData) {
   
   // Get random avatar based on occupation and gender
   const avatarIndex = gender === 'male' ? 0 : 1
-  const avatar = personaData.avatars[occupation][avatarIndex]
+  const avatar = personaData.avatars[occupation as Occupation][avatarIndex]
 
   // Get random traits and challenges
-  const traits = getRandomElements(personaData.traits[occupation], 3)
-  const challenges = getRandomElements(personaData.challenges[occupation], 2)
+  const traits = getRandomElements(personaData.traits[occupation as Occupation], 3)
+  const challenges = getRandomElements(personaData.challenges[occupation as Occupation], 2)
 
   return {
     name,

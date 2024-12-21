@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { useState, useEffect } from "react"
 import { PersonaOutput } from "@/components/persona-output"
 import { MultiSelect } from "@/components/multi-select"
@@ -14,6 +13,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { motion, AnimatePresence } from "framer-motion"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Slider } from "@/components/ui/slider"
+import { Occupation } from "@/lib/persona-data"
 
 interface Persona {
   name: string
@@ -82,13 +82,16 @@ export function PersonaGenerator() {
     setIsLoading(true)
     try {
       await new Promise(resolve => setTimeout(resolve, 1000))
-      const newPersona = generatePersona(formData)
+      const newPersona = generatePersona({
+        ...formData,
+        occupation: formData.occupation as Occupation
+      })
       setPersona(newPersona)
       toast({
         title: "Success!",
         description: "Your persona has been generated.",
       })
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to generate persona. Please try again.",
@@ -199,8 +202,8 @@ export function PersonaGenerator() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="high_school">High School</SelectItem>
-                        <SelectItem value="bachelors">Bachelor's Degree</SelectItem>
-                        <SelectItem value="masters">Master's Degree</SelectItem>
+                        <SelectItem value="bachelors">Bachelor&apos;s Degree</SelectItem>
+                        <SelectItem value="masters">Master&apos;s Degree</SelectItem>
                         <SelectItem value="phd">Ph.D.</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>

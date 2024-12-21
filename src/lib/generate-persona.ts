@@ -1,56 +1,79 @@
-import { personaData } from "@/lib/persona-data"
+import { personaData, Occupation, PersonaDataType } from './persona-data'
 
-interface FormData {
+type Gender = 'male' | 'female'
+
+type FormDataKeys = readonly ['avatars', 'traits', 'challenges']
+
+type FormData = Partial<Pick<PersonaDataType, FormDataKeys[number]>> & {
   ageRange: string
-  occupation: string
+  occupation: Occupation
   goals: string[]
+  education: string
+  experience: string
+  location: string
+  skills: string[]
+  interests: string[]
+  painPoints: string[]
+  techComfort: number
+  budget: string
+  preferredPlatforms: string[]
+  communicationStyle: string
+  decisionMakingFactors: string[]
 }
 
-// Simple seeded random number generator
-function seededRandom(seed: number) {
-  const x = Math.sin(seed++) * 10000
-  return x - Math.floor(x)
+interface GeneratedPersona extends Omit<FormData, 'traits' | 'challenges' | 'avatars'> {
+  name: string
+  avatar: string
+  traits: string[]
+  challenges: string[]
 }
 
-export function generatePersona(formData: FormData) {
-  const { ageRange, occupation, goals } = formData
-  const seed = Date.now()
+function getRandomElements<T>(arr: readonly T[], count: number): T[] {
+  const shuffled = [...arr].sort(() => 0.5 - Math.random())
+  return shuffled.slice(0, count)
+}
 
-  // Use seeded random for consistent results
-  const gender = seededRandom(seed) < 0.5 ? 'male' : 'female'
-  const nameIndex = Math.floor(seededRandom(seed + 1) * personaData.names[gender].length)
-  const name = personaData.names[gender][nameIndex]
-  
+function getRandomName(gender: Gender): string {
+  const names = gender === 'male' ? personaData.maleNames : personaData.femaleNames
+  return names[Math.floor(Math.random() * names.length)]
+}
+
+export function generatePersona(formData: FormData): GeneratedPersona {
+  const defaultPersonaData = {
+    avatars: personaData.avatars,
+    traits: personaData.traits,
+    challenges: personaData.challenges,
+  }
+
+  const mergedData = { ...defaultPersonaData, ...formData }
+
+  const gender: Gender = Math.random() < 0.5 ? 'male' : 'female'
+  const name = getRandomName(gender)
+
   const avatarIndex = gender === 'male' ? 0 : 1
-  const avatar = personaData.avatars[occupation][avatarIndex]
+  const avatar = mergedData.avatars[mergedData.occupation][avatarIndex]
 
-  // Get random traits and challenges using seeded random
-  const traits = getRandomElements(personaData.traits[occupation], 3, seed + 2)
-  const challenges = getRandomElements(personaData.challenges[occupation], 2, seed + 3)
+  const traits = getRandomElements(mergedData.traits[mergedData.occupation], 3)
+  const challenges = getRandomElements(mergedData.challenges[mergedData.occupation], 3)
 
   return {
     name,
     avatar,
-    ageRange,
-    occupation: capitalizeFirst(occupation),
-    goals: goals.map(formatGoal),
-    traits,
-    challenges
+    ageRange: mergedData.ageRange,
+    occupation: mergedData.occupation,
+    goals: mergedData.goals,
+    traits: traits as string[],
+    challenges: challenges as string[],
+    education: mergedData.education,
+    experience: mergedData.experience,
+    location: mergedData.location,
+    skills: mergedData.skills,
+    interests: mergedData.interests,
+    painPoints: mergedData.painPoints,
+    techComfort: mergedData.techComfort,
+    budget: mergedData.budget,
+    preferredPlatforms: mergedData.preferredPlatforms,
+    communicationStyle: mergedData.communicationStyle,
+    decisionMakingFactors: mergedData.decisionMakingFactors
   }
-}
-
-function getRandomElements<T>(array: T[], count: number, seed: number): T[] {
-  return [...array]
-    .map(item => ({ item, sort: seededRandom(seed++) }))
-    .sort((a, b) => a.sort - b.sort)
-    .slice(0, count)
-    .map(({ item }) => item)
-}
-
-function capitalizeFirst(string: string): string {
-  return string.charAt(0).toUpperCase() + string.slice(1)
-}
-
-function formatGoal(goal: string): string {
-  return goal.split(/(?=[A-Z])/).join(' ')
 } 
